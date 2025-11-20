@@ -1,3 +1,4 @@
+@import 'reactflow/dist/style.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,4 +11,45 @@
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* في src/index.css أو global.css */
+@import "reactflow/dist/style.css";
+
+/* Node hover effect (React Flow default nodes) */
+.rf-node {
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  will-change: transform, box-shadow;
+}
+.rf-node:hover {
+  transform: scale(1.06);
+  box-shadow: 0 10px 30px rgba(124,58,237,0.18);
+}
+
+/* Edge label background/contrast tweak */
+.react-flow__edge-text {
+  background: rgba(255,255,255,0.85);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+/* Make react flow controls less obtrusive */
+.react-flow__controls {
+  box-shadow: 0 6px 20px rgba(2,6,23,0.06);
+}
+
+/* Fine tune minimap border */
+.react-flow__minimap {
+  border-radius: 8px;
+  border: 1px solid rgba(2,6,23,0.06);
+}
+
+/* Optional: subtle hover for cards in App */
+.card-hover {
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 40px rgba(2,6,23,0.08);
 }
