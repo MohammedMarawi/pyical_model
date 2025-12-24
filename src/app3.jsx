@@ -1,273 +1,397 @@
-// export default function App() {
-//   const collections = [
-//     {
-//       name: 'users',
-//       color: 'bg-blue-50 border-blue-300',
-//       fields: [
-//         { name: '_id', type: 'ObjectId', constraint: 'PK, Auto-generated' },
-//         { name: 'name', type: 'String', constraint: 'Required, Index' },
-//         { name: 'email', type: 'String', constraint: 'Required, Unique, Index' },
-//         { name: 'phone', type: 'String', constraint: 'Required, Unique' },
-//         { name: 'location', type: 'Object', constraint: '{ type: "Point", coordinates: [lng, lat] }' },
-//         { name: 'createdAt', type: 'Date', constraint: 'Default: Date.now()' },
-//         { name: 'updatedAt', type: 'Date', constraint: 'Default: Date.now()' }
-//       ],
-//       indexes: ['email (unique)', 'phone (unique)', 'location (2dsphere)']
-//     },
-//     {
-//       name: 'service_providers',
-//       color: 'bg-green-50 border-green-300',
-//       fields: [
-//         { name: '_id', type: 'ObjectId', constraint: 'PK, Auto-generated' },
-//         { name: 'name', type: 'String', constraint: 'Required, Index' },
-//         { name: 'email', type: 'String', constraint: 'Required, Unique' },
-//         { name: 'phone', type: 'String', constraint: 'Required, Unique' },
-//         { name: 'services', type: 'Array[String]', constraint: 'Required' },
-//         { name: 'location', type: 'Object', constraint: '{ type: "Point", coordinates: [lng, lat] }' },
-//         { name: 'averageRating', type: 'Number', constraint: 'Default: 0, Min: 0, Max: 5' },
-//         { name: 'totalRatings', type: 'Number', constraint: 'Default: 0' },
-//         { name: 'isAvailable', type: 'Boolean', constraint: 'Default: true, Index' },
-//         { name: 'createdAt', type: 'Date', constraint: 'Default: Date.now()' }
-//       ],
-//       indexes: ['location (2dsphere)', 'isAvailable', 'averageRating (desc)', 'email (unique)']
-//     },
-//     {
-//       name: 'service_requests',
-//       color: 'bg-purple-50 border-purple-300',
-//       fields: [
-//         { name: '_id', type: 'ObjectId', constraint: 'PK, Auto-generated' },
-//         { name: 'userId', type: 'ObjectId', constraint: 'FK -> users._id, Required, Index' },
-//         { name: 'providerId', type: 'ObjectId', constraint: 'FK -> service_providers._id, Index' },
-//         { name: 'serviceType', type: 'String', constraint: 'Required, Index' },
-//         { name: 'status', type: 'String', constraint: 'Enum: [pending, accepted, in_progress, completed, cancelled]' },
-//         { name: 'userLocation', type: 'Object', constraint: '{ type: "Point", coordinates: [lng, lat] }' },
-//         { name: 'providerLocation', type: 'Object', constraint: '{ type: "Point", coordinates: [lng, lat] }' },
-//         { name: 'price', type: 'Number', constraint: 'Required, Min: 0' },
-//         { name: 'requestedAt', type: 'Date', constraint: 'Default: Date.now(), Index' },
-//         { name: 'completedAt', type: 'Date', constraint: 'Nullable' },
-//         { name: 'notes', type: 'String', constraint: 'Optional' }
-//       ],
-//       indexes: ['userId', 'providerId', 'status', 'requestedAt (desc)', 'userLocation (2dsphere)']
-//     },
-//     {
-//       name: 'ratings',
-//       color: 'bg-yellow-50 border-yellow-300',
-//       fields: [
-//         { name: '_id', type: 'ObjectId', constraint: 'PK, Auto-generated' },
-//         { name: 'userId', type: 'ObjectId', constraint: 'FK -> users._id, Required, Index' },
-//         { name: 'providerId', type: 'ObjectId', constraint: 'FK -> service_providers._id, Required, Index' },
-//         { name: 'serviceRequestId', type: 'ObjectId', constraint: 'FK -> service_requests._id, Required, Unique' },
-//         { name: 'rating', type: 'Number', constraint: 'Required, Min: 1, Max: 5' },
-//         { name: 'comment', type: 'String', constraint: 'Optional, Max: 500 chars' },
-//         { name: 'pointsEarned', type: 'Number', constraint: 'Default: 0' },
-//         { name: 'createdAt', type: 'Date', constraint: 'Default: Date.now(), Index' }
-//       ],
-//       indexes: ['userId', 'providerId', 'serviceRequestId (unique)', 'createdAt (desc)']
-//     },
-//     {
-//       name: 'payments',
-//       color: 'bg-orange-50 border-orange-300',
-//       fields: [
-//         { name: '_id', type: 'ObjectId', constraint: 'PK, Auto-generated' },
-//         { name: 'userId', type: 'ObjectId', constraint: 'FK -> users._id, Required, Index' },
-//         { name: 'providerId', type: 'ObjectId', constraint: 'FK -> service_providers._id, Required, Index' },
-//         { name: 'serviceRequestId', type: 'ObjectId', constraint: 'FK -> service_requests._id, Required, Unique' },
-//         { name: 'amount', type: 'Number', constraint: 'Required, Min: 0' },
-//         { name: 'discountFromPoints', type: 'Number', constraint: 'Default: 0, Min: 0' },
-//         { name: 'finalAmount', type: 'Number', constraint: 'Required, Min: 0' },
-//         { name: 'paymentMethod', type: 'String', constraint: 'Enum: [cash, card, wallet, points]' },
-//         { name: 'status', type: 'String', constraint: 'Enum: [pending, completed, failed, refunded]' },
-//         { name: 'transactionId', type: 'String', constraint: 'Unique, Index' },
-//         { name: 'pointsEarned', type: 'Number', constraint: 'Default: 0' },
-//         { name: 'invoiceUrl', type: 'String', constraint: 'Optional' },
-//         { name: 'paidAt', type: 'Date', constraint: 'Default: Date.now(), Index' }
-//       ],
-//       indexes: ['userId', 'providerId', 'serviceRequestId (unique)', 'transactionId (unique)', 'status', 'paidAt (desc)']
-//     },
-//     {
-//       name: 'loyalty_points',
-//       color: 'bg-pink-50 border-pink-300',
-//       fields: [
-//         { name: '_id', type: 'ObjectId', constraint: 'PK, Auto-generated' },
-//         { name: 'userId', type: 'ObjectId', constraint: 'FK -> users._id, Required, Unique, Index' },
-//         { name: 'totalPointsEarned', type: 'Number', constraint: 'Default: 0, Min: 0' },
-//         { name: 'currentBalance', type: 'Number', constraint: 'Default: 0, Min: 0' },
-//         { name: 'pointsUsed', type: 'Number', constraint: 'Default: 0, Min: 0' },
-//         { name: 'pointsHistory', type: 'Array[Object]', constraint: '[ { type, points, description, date, refId } ]' },
-//         { name: 'lastUpdated', type: 'Date', constraint: 'Default: Date.now()' }
-//       ],
-//       indexes: ['userId (unique)', 'currentBalance (desc)']
-//     },
-//     {
-//       name: 'scheduled_services',
-//       color: 'bg-cyan-50 border-cyan-300',
-//       fields: [
-//         { name: '_id', type: 'ObjectId', constraint: 'PK, Auto-generated' },
-//         { name: 'userId', type: 'ObjectId', constraint: 'FK -> users._id, Required, Index' },
-//         { name: 'providerId', type: 'ObjectId', constraint: 'FK -> service_providers._id, Index' },
-//         { name: 'serviceType', type: 'String', constraint: 'Required' },
-//         { name: 'scheduledDate', type: 'Date', constraint: 'Required, Index' },
-//         { name: 'frequency', type: 'String', constraint: 'Enum: [once, weekly, monthly, quarterly, yearly]' },
-//         { name: 'status', type: 'String', constraint: 'Enum: [scheduled, completed, cancelled]' },
-//         { name: 'notificationSent', type: 'Boolean', constraint: 'Default: false' },
-//         { name: 'notificationDate', type: 'Date', constraint: 'Optional' },
-//         { name: 'nextServiceDate', type: 'Date', constraint: 'Optional, Index' },
-//         { name: 'createdAt', type: 'Date', constraint: 'Default: Date.now()' }
-//       ],
-//       indexes: ['userId', 'providerId', 'scheduledDate', 'nextServiceDate', 'status']
-//     },
-//     {
-//       name: 'service_history',
-//       color: 'bg-red-50 border-red-300',
-//       fields: [
-//         { name: '_id', type: 'ObjectId', constraint: 'PK, Auto-generated' },
-//         { name: 'userId', type: 'ObjectId', constraint: 'FK -> users._id, Required, Index' },
-//         { name: 'providerId', type: 'ObjectId', constraint: 'FK -> service_providers._id, Required, Index' },
-//         { name: 'serviceRequestId', type: 'ObjectId', constraint: 'FK -> service_requests._id, Required, Index' },
-//         { name: 'serviceType', type: 'String', constraint: 'Required, Index' },
-//         { name: 'price', type: 'Number', constraint: 'Required' },
-//         { name: 'rating', type: 'Number', constraint: 'Min: 1, Max: 5' },
-//         { name: 'paymentMethod', type: 'String', constraint: 'Required' },
-//         { name: 'location', type: 'Object', constraint: '{ type: "Point", coordinates: [lng, lat] }' },
-//         { name: 'completedAt', type: 'Date', constraint: 'Required, Index' },
-//         { name: 'notes', type: 'String', constraint: 'Optional' },
-//         { name: 'invoiceUrl', type: 'String', constraint: 'Optional' }
-//       ],
-//       indexes: ['userId', 'providerId', 'serviceType', 'completedAt (desc)', 'rating']
-//     }
-//   ];
-
-//   return (
-//     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-8" dir="rtl">
-//       <div className="max-w-7xl mx-auto">
-//         <div className="text-center mb-12">
-//           <h1 className="text-4xl font-bold text-gray-800 mb-3">النموذج الفيزيائي - MongoDB</h1>
-//           <p className="text-xl text-gray-600">Car Hero Platform - Database Physical Design</p>
-//           <div className="mt-4 inline-block bg-blue-100 px-4 py-2 rounded-lg">
-//             <span className="text-sm font-semibold text-blue-800">قاعدة البيانات: MongoDB (NoSQL)</span>
-//           </div>
-//         </div>
-
-//         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-//           {collections.map((collection, idx) => (
-//             <div key={idx} className={`${collection.color} border-2 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow`}>
-//               <div className="flex items-center justify-between mb-4">
-//                 <h2 className="text-2xl font-bold text-gray-800">{collection.name}</h2>
-//                 <span className="bg-white px-3 py-1 rounded-full text-xs font-semibold text-gray-600">
-//                   Collection
-//                 </span>
-//               </div>
-              
-//               <div className="bg-white rounded-lg p-4 mb-4 overflow-x-auto">
-//                 <table className="w-full text-sm">
-//                   <thead>
-//                     <tr className="border-b-2 border-gray-300">
-//                       <th className="text-right pb-2 font-bold text-gray-700">Field</th>
-//                       <th className="text-right pb-2 font-bold text-gray-700">Type</th>
-//                       <th className="text-right pb-2 font-bold text-gray-700">Constraints</th>
-//                     </tr>
-//                   </thead>
-//                   <tbody>
-//                     {collection.fields.map((field, fidx) => (
-//                       <tr key={fidx} className="border-b border-gray-200">
-//                         <td className="py-2 font-mono text-blue-700 font-semibold">{field.name}</td>
-//                         <td className="py-2 font-mono text-green-600">{field.type}</td>
-//                         <td className="py-2 text-xs text-gray-600">{field.constraint}</td>
-//                       </tr>
-//                     ))}
-//                   </tbody>
-//                 </table>
-//               </div>
-
-//               <div className="bg-white rounded-lg p-4">
-//                 <h3 className="font-bold text-gray-700 mb-2 text-sm">📑 Indexes:</h3>
-//                 <div className="flex flex-wrap gap-2">
-//                   {collection.indexes.map((index, iidx) => (
-//                     <span key={iidx} className="bg-gray-100 px-3 py-1 rounded-full text-xs font-mono text-gray-700">
-//                       {index}
-//                     </span>
-//                   ))}
-//                 </div>
-//               </div>
-//             </div>
-//           ))}
-//         </div>
-
-//         <div className="mt-12 bg-white rounded-xl p-8 shadow-lg">
-//           <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">🔗 العلاقات بين المجموعات</h2>
-//           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-//             <div className="bg-blue-50 p-4 rounded-lg border-r-4 border-blue-500">
-//               <h3 className="font-bold text-blue-800 mb-2">المستخدم ↔ الخدمات</h3>
-//               <ul className="text-sm text-gray-700 space-y-1">
-//                 <li>• users._id → service_requests.userId</li>
-//                 <li>• users._id → ratings.userId</li>
-//                 <li>• users._id → payments.userId</li>
-//                 <li>• users._id → loyalty_points.userId</li>
-//                 <li>• users._id → scheduled_services.userId</li>
-//               </ul>
-//             </div>
-            
-//             <div className="bg-green-50 p-4 rounded-lg border-r-4 border-green-500">
-//               <h3 className="font-bold text-green-800 mb-2">مقدم الخدمة ↔ الخدمات</h3>
-//               <ul className="text-sm text-gray-700 space-y-1">
-//                 <li>• service_providers._id → service_requests.providerId</li>
-//                 <li>• service_providers._id → ratings.providerId</li>
-//                 <li>• service_providers._id → payments.providerId</li>
-//                 <li>• service_providers._id → scheduled_services.providerId</li>
-//               </ul>
-//             </div>
-            
-//             <div className="bg-purple-50 p-4 rounded-lg border-r-4 border-purple-500">
-//               <h3 className="font-bold text-purple-800 mb-2">طلب الخدمة ↔ التفاصيل</h3>
-//               <ul className="text-sm text-gray-700 space-y-1">
-//                 <li>• service_requests._id → ratings.serviceRequestId</li>
-//                 <li>• service_requests._id → payments.serviceRequestId</li>
-//                 <li>• service_requests._id → service_history.serviceRequestId</li>
-//               </ul>
-//             </div>
-            
-//             <div className="bg-yellow-50 p-4 rounded-lg border-r-4 border-yellow-500">
-//               <h3 className="font-bold text-yellow-800 mb-2">معلومات إضافية</h3>
-//               <ul className="text-sm text-gray-700 space-y-1">
-//                 <li>• جميع المواقع تستخدم GeoJSON format</li>
-//                 <li>• Indexes الجغرافية: 2dsphere</li>
-//                 <li>• التقييمات تؤثر على averageRating</li>
-//                 <li>• النقاط تُحسب تلقائياً من الدفع والتقييم</li>
-//               </ul>
-//             </div>
-//           </div>
-//         </div>
-
-//         <div className="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-200">
-//           <h3 className="font-bold text-gray-800 mb-4 text-center text-xl">📌 ملاحظات تقنية مهمة</h3>
-//           <ul className="grid md:grid-cols-2 gap-3 text-sm text-gray-700">
-//             <li className="flex items-start">
-//               <span className="text-blue-600 ml-2">✓</span>
-//               <span><strong>ObjectId:</strong> معرّف فريد تلقائي من MongoDB</span>
-//             </li>
-//             <li className="flex items-start">
-//               <span className="text-green-600 ml-2">✓</span>
-//               <span><strong>GeoSpatial:</strong> استخدام 2dsphere للخرائط</span>
-//             </li>
-//             <li className="flex items-start">
-//               <span className="text-purple-600 ml-2">✓</span>
-//               <span><strong>Indexes:</strong> لتسريع الاستعلامات الشائعة</span>
-//             </li>
-//             <li className="flex items-start">
-//               <span className="text-orange-600 ml-2">✓</span>
-//               <span><strong>Embedded Arrays:</strong> لتخزين سجل النقاط</span>
-//             </li>
-//             <li className="flex items-start">
-//               <span className="text-red-600 ml-2">✓</span>
-//               <span><strong>Enum Validation:</strong> للحقول ذات القيم المحددة</span>
-//             </li>
-//             <li className="flex items-start">
-//               <span className="text-cyan-600 ml-2">✓</span>
-//               <span><strong>Timestamps:</strong> تتبع وقت الإنشاء والتحديث</span>
-//             </li>
-//           </ul>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
+const mockCollections = [
+  {
+    name: "users",
+    icon: Users,
+    color: "from-blue-500 to-blue-600",
+    bgColor: "bg-blue-50",
+    fields: [
+    { name: '_id', type: 'ObjectId', constraint: 'PK, Auto-generated (maps to id uuid)' },
+        { name: 'phone', type: 'String', constraint: 'Required, Unique, Index' },
+        { name: 'email', type: 'String', constraint: 'Optional, Unique, Index' },
+        { name: 'passwordHash', type: 'String', constraint: 'Required' },
+        { name: 'profile', type: 'Object', constraint: 'Optional, JSON' },
+        { name: 'isPhoneVerified', type: 'Boolean', constraint: 'Default: false' },
+        { name: 'phoneVerificationToken', type: 'String', constraint: 'Optional' },
+        { name: 'phoneVerificationExpiry', type: 'Date', constraint: 'Optional' },
+        { name: 'isEmailVerified', type: 'Boolean', constraint: 'Default: false' },
+        { name: 'emailVerificationToken', type: 'String', constraint: 'Optional' },
+        { name: 'emailVerificationExpiry', type: 'Date', constraint: 'Optional' },
+        { name: 'lastPasswordChange', type: 'Date', constraint: 'Optional' },
+        { name: 'passwordResetToken', type: 'String', constraint: 'Optional' },
+        { name: 'passwordResetExpiry', type: 'Date', constraint: 'Optional' },
+        { name: 'failedLoginAttempts', type: 'Number', constraint: 'Default: 0' },
+        { name: 'lockedUntil', type: 'Date', constraint: 'Optional' },
+        { name: 'accountStatus', type: 'String', constraint: 'Enum: [ACTIVE, INACTIVE, SUSPENDED, DELETED], Default: ACTIVE' },
+        { name: 'securityNotifications', type: 'Object', constraint: 'Optional, JSON' },
+        { name: 'lastSecurityNotificationAt', type: 'Date', constraint: 'Optional' },
+        { name: 'lastLoginAt', type: 'Date', constraint: 'Optional, Index' },
+        { name: 'lastLogoutAt', type: 'Date', constraint: 'Optional' },
+        { name: 'loginCount', type: 'Number', constraint: 'Default: 0' },
+        { name: 'lastActivityAt', type: 'Date', constraint: 'Optional' },
+        { name: 'deletedAt', type: 'Date', constraint: 'Optional' },
+        { name: 'createdAt', type: 'Date', constraint: 'Default: Date.now()' },
+        { name: 'updatedAt', type: 'Date', constraint: 'Default: Date.now(), auto-updated' },
+        { name: 'role', type: 'String', constraint: 'Enum: [USER, PROVIDER, ADMIN, SUPPORT], Default: USER' }
+      ],
+    indexes: ["email", "createdAt"],
+  },
+  {
+    name: "user_sessions",
+    icon: Clock,
+    color: "from-cyan-500 to-cyan-600",
+    bgColor: "bg-cyan-50",
+    fields: [
+      { name: '_id', type: 'ObjectId', constraint: 'PK, Auto-generated (id uuid)' },
+        { name: 'userId', type: 'ObjectId', constraint: 'FK -> users._id, Required, Index' },
+        { name: 'refreshToken', type: 'String', constraint: 'Required, Unique, Index' },
+        { name: 'accessToken', type: 'String', constraint: 'Optional' },
+        { name: 'deviceId', type: 'String', constraint: 'Required' },
+        { name: 'deviceName', type: 'String', constraint: 'Required' },
+        { name: 'ipAddress', type: 'String', constraint: 'Optional' },
+        { name: 'userAgent', type: 'String', constraint: 'Optional' },
+        { name: 'location', type: 'Object', constraint: 'Optional, JSON' },
+        { name: 'isActive', type: 'Boolean', constraint: 'Default: true' },
+        { name: 'lastActivityAt', type: 'Date', constraint: 'Default: Date.now()' },
+        { name: 'expiresAt', type: 'Date', constraint: 'Required, Index' },
+        { name: 'createdAt', type: 'Date', constraint: 'Default: Date.now()' }
+      ],
+    indexes: ["userId", "token", "expiresAt"],
+  },
+  {
+    name: "user_devices",
+    icon: Shield,
+    color: "from-indigo-500 to-indigo-600",
+    bgColor: "bg-indigo-50",
+     fields: [
+        { name: '_id', type: 'ObjectId', constraint: 'PK, Auto-generated (id uuid)' },
+        { name: 'userId', type: 'ObjectId', constraint: 'FK -> users._id, Required, Index' },
+        { name: 'deviceId', type: 'String', constraint: 'Required' },
+        { name: 'deviceName', type: 'String', constraint: 'Required' },
+        { name: 'deviceType', type: 'String', constraint: 'Optional' },
+        { name: 'firstSeenAt', type: 'Date', constraint: 'Default: Date.now()' },
+        { name: 'firstSeenIp', type: 'String', constraint: 'Optional' },
+        { name: 'lastSeenAt', type: 'Date', constraint: 'Default: Date.now()' },
+        { name: 'lastSeenIp', type: 'String', constraint: 'Optional' },
+        { name: 'isTrusted', type: 'Boolean', constraint: 'Default: false' },
+        { name: 'createdAt', type: 'Date', constraint: 'Default: Date.now()' }
+      ],
+    indexes: ["userId", "deviceId"],
+  },
+  {
+    name: "audit_logs",
+    icon: BookOpen,
+    color: "from-slate-500 to-slate-600",
+    bgColor: "bg-slate-50",
+    fields: [
+       { name: '_id', type: 'ObjectId', constraint: 'PK, Auto-generated (id uuid)' },
+        { name: 'userId', type: 'ObjectId', constraint: 'Optional, FK -> users._id, Index' },
+        { name: 'action', type: 'String', constraint: 'Enum: many actions (LOGIN, LOGOUT, CREATE, UPDATE, ...)' },
+        { name: 'entity', type: 'String', constraint: 'Entity name (e.g., users, providers)' },
+        { name: 'entityId', type: 'String', constraint: 'Entity record id' },
+        { name: 'changes', type: 'Object', constraint: 'Optional, JSON diff' },
+        { name: 'metadata', type: 'Object', constraint: 'Optional' },
+        { name: 'createdAt', type: 'Date', constraint: 'Default: Date.now(), Index' }
+      ],
+    indexes: ["userId", "createdAt"],
+  },
+  {
+    name: "notifications",
+    icon: AlertCircle,
+    color: "from-orange-500 to-orange-600",
+    bgColor: "bg-orange-50",
+    fields: [
+         { name: '_id', type: 'ObjectId', constraint: 'PK, Auto-generated (id uuid)' },
+        { name: 'userId', type: 'ObjectId', constraint: 'FK -> users._id, Required, Index' },
+        { name: 'type', type: 'String', constraint: 'Enum: [INFO, WARNING, ALERT, PROMOTION, SECURITY]' },
+        { name: 'title', type: 'String', constraint: 'Required' },
+        { name: 'body', type: 'String', constraint: 'Required' },
+        { name: 'data', type: 'Object', constraint: 'Optional, JSON' },
+        { name: 'priority', type: 'String', constraint: 'Optional' },
+        { name: 'isRead', type: 'Boolean', constraint: 'Default: false' },
+        { name: 'readAt', type: 'Date', constraint: 'Optional' },
+        { name: 'isPushed', type: 'Boolean', constraint: 'Default: false' },
+        { name: 'pushedAt', type: 'Date', constraint: 'Optional' },
+        { name: 'scheduledAt', type: 'Date', constraint: 'Optional' },
+        { name: 'createdAt', type: 'Date', constraint: 'Default: Date.now(), Index' }
+      ],
+    indexes: ["userId", "read"],
+  },
+  {
+    name: "providers",
+    icon: Truck,
+    color: "from-green-500 to-green-600",
+    bgColor: "bg-green-50",
+    fields: [
+        { name: '_id', type: 'ObjectId', constraint: 'PK, Auto-generated (id uuid)' },
+        { name: 'userId', type: 'ObjectId', constraint: 'Required, Unique, FK -> users._id, Index' },
+        { name: 'businessName', type: 'String', constraint: 'Required' },
+        { name: 'ownerName', type: 'String', constraint: 'Required' },
+        { name: 'contactPhone', type: 'String', constraint: 'Required' },
+        { name: 'locationCity', type: 'String', constraint: 'Required' },
+        { name: 'contactEmail', type: 'String', constraint: 'Optional' },
+        { name: 'location', type: 'Object', constraint: '{ type: \"Point\", coordinates: [lng, lat] }' },
+        { name: 'locationAddress', type: 'String', constraint: 'Required' },
+        { name: 'servicesText', type: 'String', constraint: 'Required' },
+        { name: 'totalServices', type: 'Number', constraint: 'Default: 0' },
+        { name: 'rating', type: 'Number', constraint: 'Default: 0' },
+        { name: 'totalReviews', type: 'Number', constraint: 'Default: 0' },
+        { name: 'priceRange', type: 'String', constraint: 'Optional' },
+        { name: 'metadata', type: 'Object', constraint: 'Optional, JSON' },
+        { name: 'status', type: 'String', constraint: 'Enum: [PENDING, APPROVED, REJECTED, SUSPENDED, DELETED], Default: PENDING' },
+        { name: 'approvedAt', type: 'Date', constraint: 'Optional' },
+        { name: 'rejectedAt', type: 'Date', constraint: 'Optional' },
+        { name: 'rejectionReason', type: 'String', constraint: 'Optional' },
+        { name: 'deletedAt', type: 'Date', constraint: 'Optional' },
+        { name: 'createdAt', type: 'Date', constraint: 'Default: Date.now()' },
+        { name: 'updatedAt', type: 'Date', constraint: 'Default: Date.now(), auto-updated' }
+      ],
+    indexes: ["email", "location", "rating", "verified"],
+  },
+  {
+    name: "provider_services",
+    icon: Zap,
+    color: "from-emerald-500 to-emerald-600",
+    bgColor: "bg-emerald-50",
+    fields: [
+        { name: '_id', type: 'ObjectId', constraint: 'PK, Auto-generated (id uuid)' },
+        { name: 'providerId', type: 'ObjectId', constraint: 'FK -> providers._id, Required, Index' },
+        { name: 'serviceName', type: 'String', constraint: 'Required' },
+        { name: 'serviceCategory', type: 'String', constraint: 'Required (e.g., صيانة, كهرباء, ميكانيك)' },
+        { name: 'description', type: 'String', constraint: 'Optional' },
+        { name: 'basePrice', type: 'Number', constraint: 'Required' },
+        { name: 'isActive', type: 'Boolean', constraint: 'Default: true' },
+        { name: 'metadata', type: 'Object', constraint: 'Optional' },
+        { name: 'createdAt', type: 'Date', constraint: 'Default: Date.now()' },
+        { name: 'updatedAt', type: 'Date', constraint: 'Default: Date.now(), auto-updated' }
+      ],
+    indexes: ["providerId"],
+  },
+  {
+    name: "vehicles",
+    icon: Truck,
+    color: "from-amber-500 to-amber-600",
+    bgColor: "bg-amber-50",
+    fields: [
+      { name: '_id', type: 'ObjectId', constraint: 'PK, Auto-generated (id uuid)' },
+        { name: 'userId', type: 'ObjectId', constraint: 'FK -> users._id, Required, Index' },
+        { name: 'make', type: 'String', constraint: 'Required' },
+        { name: 'model', type: 'String', constraint: 'Required' },
+        { name: 'year', type: 'Number', constraint: 'Required' },
+        { name: 'color', type: 'String', constraint: 'Optional' },
+        { name: 'plateNumber', type: 'String', constraint: 'Required, Unique' },
+        { name: 'vin', type: 'String', constraint: 'Optional, Unique' },
+        { name: 'serviceDueAt', type: 'Date', constraint: 'Optional' },
+        { name: 'isDefault', type: 'Boolean', constraint: 'Default: false' },
+        { name: 'createdAt', type: 'Date', constraint: 'Default: Date.now()' },
+        { name: 'updatedAt', type: 'Date', constraint: 'Default: Date.now(), auto-updated' },
+        { name: 'deletedAt', type: 'Date', constraint: 'Optional' }
+      ],
+    indexes: ["userId", "licensePlate"],
+  },
+  {
+    name: "subscriptions",
+    icon: TrendingUp,
+    color: "from-purple-500 to-purple-600",
+    bgColor: "bg-purple-50",
+    fields: [
+        { name: '_id', type: 'ObjectId', constraint: 'PK, Auto-generated (id uuid)' },
+        { name: 'userId', type: 'ObjectId', constraint: 'FK -> users._id, Required, Index' },
+        { name: 'plan', type: 'String', constraint: 'Enum: [FREE, BASIC, PREMIUM, ENTERPRISE], Required' },
+        { name: 'status', type: 'String', constraint: 'Enum: [ACTIVE, CANCELLED, EXPIRED, TRIAL], Default: ACTIVE' },
+        { name: 'price', type: 'Number', constraint: 'Default: 0' },
+        { name: 'currency', type: 'String', constraint: 'Default: SAR' },
+        { name: 'startDate', type: 'Date', constraint: 'Default: Date.now()' },
+        { name: 'endDate', type: 'Date', constraint: 'Optional' },
+        { name: 'autoRenew', type: 'Boolean', constraint: 'Default: false' },
+        { name: 'autoRenewReminderSentAt', type: 'Date', constraint: 'Optional' },
+        { name: 'paymentStatus', type: 'String', constraint: 'Enum: [PENDING, PAID, UNPAID, FAILED, REFUNDED], Default: PENDING' },
+        { name: 'metadata', type: 'Object', constraint: 'Optional' },
+        { name: 'createdAt', type: 'Date', constraint: 'Default: Date.now()' },
+        { name: 'updatedAt', type: 'Date', constraint: 'Default: Date.now(), auto-updated' },
+        { name: 'cancelledAt', type: 'Date', constraint: 'Optional' }
+      ],
+    indexes: ["userId", "isActive", "endDate"],
+  },
+  {
+    name: "service_requests",
+    icon: CheckCircle2,
+    color: "from-yellow-500 to-yellow-600",
+    bgColor: "bg-yellow-50",
+    fields: [
+      { name: "_id", type: "ObjectId", constraint: "Primary Key" },
+      { name: "userId", type: "ObjectId", constraint: "FK: users" },
+      { name: "providerId", type: "ObjectId", constraint: "FK: providers" },
+      { name: "vehicleId", type: "ObjectId", constraint: "FK: vehicles" },
+      { name: "status", type: "Enum", constraint: "pending/accepted/completed" },
+      { name: "createdAt", type: "Date", constraint: "Timestamp" },
+      { name: "updatedAt", type: "Date", constraint: "Timestamp" },
+    ],
+    indexes: ["userId", "providerId", "status", "createdAt"],
+  },
+  {
+    name: "chats",
+    icon: MessageSquare,
+    color: "from-pink-500 to-pink-600",
+    bgColor: "bg-pink-50",
+    fields: [
+      { name: '_id', type: 'ObjectId', constraint: 'PK, Auto-generated (id uuid)' },
+        { name: 'customerId', type: 'ObjectId', constraint: 'FK -> users._id, Required' },
+        { name: 'providerId', type: 'ObjectId', constraint: 'FK -> providers._id, Required' },
+        { name: 'lastMessage', type: 'String', constraint: 'Optional' },
+        { name: 'lastMessageAt', type: 'Date', constraint: 'Optional' },
+        { name: 'isActive', type: 'Boolean', constraint: 'Default: true' },
+        { name: 'archived', type: 'Boolean', constraint: 'Default: false' },
+        { name: 'isMuted', type: 'Boolean', constraint: 'Default: false' },
+        { name: 'lastSeenMessageId', type: 'String', constraint: 'Optional' },
+        { name: 'lastTypingAt', type: 'Date', constraint: 'Optional' },
+        { name: 'createdAt', type: 'Date', constraint: 'Default: Date.now()' },
+        { name: 'updatedAt', type: 'Date', constraint: 'Default: Date.now(), auto-updated' }
+      ],
+    indexes: ["customerId", "providerId", "requestId"],
+  },
+  {
+    name: "messages",
+    icon: MessageSquare,
+    color: "from-rose-500 to-rose-600",
+    bgColor: "bg-rose-50",
+    fields: [
+        { name: '_id', type: 'ObjectId', constraint: 'PK, Auto-generated (id uuid)' },
+        { name: 'chatId', type: 'ObjectId', constraint: 'FK -> chats._id, Required, Index' },
+        { name: 'senderId', type: 'ObjectId', constraint: 'FK -> users._id, Required, Index' },
+        { name: 'type', type: 'String', constraint: 'Enum: [TEXT, IMAGE, FILE, LOCATION, SYSTEM], Default: TEXT' },
+        { name: 'content', type: 'String', constraint: 'Required, Text' },
+        { name: 'metadata', type: 'Object', constraint: 'Optional, JSON' },
+        { name: 'isRead', type: 'Boolean', constraint: 'Default: false' },
+        { name: 'readAt', type: 'Date', constraint: 'Optional' },
+        { name: 'deletedAt', type: 'Date', constraint: 'Optional' },
+        { name: 'editedAt', type: 'Date', constraint: 'Optional' },
+        { name: 'reactions', type: 'Object', constraint: 'Optional, JSON' },
+        { name: 'createdAt', type: 'Date', constraint: 'Default: Date.now(), Index' }
+      ],
+    indexes: ["chatId", "senderId", "createdAt"],
+  },
+  {
+    name: "reviews",
+    icon: Star,
+    color: "from-fuchsia-500 to-fuchsia-600",
+    bgColor: "bg-fuchsia-50",
+    fields: [
+        { name: '_id', type: 'ObjectId', constraint: 'PK, Auto-generated (id uuid)' },
+        { name: 'providerId', type: 'ObjectId', constraint: 'FK -> providers._id, Required, Index' },
+        { name: 'reviewerId', type: 'ObjectId', constraint: 'FK -> users._id, Required, Index' },
+        { name: 'rating', type: 'Number', constraint: 'Required (Int)' },
+        { name: 'comment', type: 'String', constraint: 'Optional' },
+        { name: 'orderId', type: 'String', constraint: 'Optional, Unique' },
+        { name: 'isVisible', type: 'Boolean', constraint: 'Default: true' },
+        { name: 'createdAt', type: 'Date', constraint: 'Default: Date.now()' },
+        { name: 'updatedAt', type: 'Date', constraint: 'Default: Date.now(), auto-updated' }
+      ],
+    indexes: ["requestId", "providerId", "rating"],
+  },
+  {
+    name: "provider_documents",
+    icon: Lock,
+    color: "from-teal-500 to-teal-600",
+    bgColor: "bg-teal-50",
+    fields: [
+        { name: '_id', type: 'ObjectId', constraint: 'PK, Auto-generated (id uuid)' },
+        { name: 'providerId', type: 'ObjectId', constraint: 'FK -> providers._id, Required, Index' },
+        { name: 'documentType', type: 'String', constraint: 'Required' },
+        { name: 'documentStatus', type: 'String', constraint: 'Default: PENDING' },
+        { name: 'fileUrl', type: 'String', constraint: 'Required' },
+        { name: 'notes', type: 'String', constraint: 'Optional' },
+        { name: 'expiresAt', type: 'Date', constraint: 'Optional' },
+        { name: 'verifiedAt', type: 'Date', constraint: 'Optional' },
+        { name: 'uploadedAt', type: 'Date', constraint: 'Default: Date.now()' }
+      ],
+    indexes: ["providerId", "verified"],
+  },
+  {
+    name: "service_areas",
+    icon: MapPin,
+    color: "from-lime-500 to-lime-600",
+    bgColor: "bg-lime-50",
+    fields: [
+        { name: '_id', type: 'ObjectId', constraint: 'PK, Auto-generated (id uuid)' },
+        { name: 'providerId', type: 'ObjectId', constraint: 'FK -> providers._id, Required, Index' },
+        { name: 'city', type: 'String', constraint: 'Required, Index' },
+        { name: 'district', type: 'String', constraint: 'Optional' },
+        { name: 'radius', type: 'Number', constraint: 'Optional (km)' },
+        { name: 'isActive', type: 'Boolean', constraint: 'Default: true' }
+      ],
+    indexes: ["providerId", "polygon"],
+  },
+  {
+    name: "ratings",
+    icon: Star,
+    color: "from-orange-500 to-orange-600",
+    bgColor: "bg-orange-50",
+    fields: [
+      { name: "_id", type: "ObjectId", constraint: "Primary Key" },
+      { name: "requestId", type: "ObjectId", constraint: "FK: service_requests2" },
+      { name: "score", type: "Int32", constraint: "1-5" },
+      { name: "feedback", type: "String", constraint: "Optional" },
+      { name: "createdAt", type: "Date", constraint: "Timestamp" },
+    ],
+    indexes: ["requestId", "score"],
+  },
+  {
+    name: "payments",
+    icon: CreditCard,
+    color: "from-green-600 to-green-700",
+    bgColor: "bg-green-50",
+    fields: [
+      { name: "_id", type: "ObjectId", constraint: "Primary Key" },
+      { name: "requestId", type: "ObjectId", constraint: "FK: service_requests" },
+      { name: "amount", type: "Decimal", constraint: "Required" },
+      { name: "method", type: "Enum", constraint: "card/cash/wallet" },
+      { name: "status", type: "Enum", constraint: "pending/completed/failed" },
+      { name: "createdAt", type: "Date", constraint: "Timestamp" },
+    ],
+    indexes: ["requestId", "status"],
+  },
+  {
+    name: "loyalty_points",
+    icon: TrendingUp,
+    color: "from-blue-600 to-blue-700",
+    bgColor: "bg-blue-50",
+    fields: [
+      { name: "_id", type: "ObjectId", constraint: "Primary Key" },
+      { name: "userId", type: "ObjectId", constraint: "FK: users" },
+      { name: "points", type: "Int32", constraint: "Required" },
+      { name: "transactionId", type: "ObjectId", constraint: "Optional" },
+      { name: "createdAt", type: "Date", constraint: "Timestamp" },
+    ],
+    indexes: ["userId"],
+  },
+  {
+    name: "scheduled_services",
+    icon: Calendar,
+    color: "from-cyan-600 to-cyan-700",
+    bgColor: "bg-cyan-50",
+    fields: [
+      { name: "_id", type: "ObjectId", constraint: "Primary Key" },
+      { name: "requestId", type: "ObjectId", constraint: "FK: service_requests" },
+      { name: "scheduledDate", type: "Date", constraint: "Required" },
+      { name: "duration", type: "Int32", constraint: "Minutes" },
+      { name: "location", type: "GeoJSON", constraint: "Point" },
+      { name: "createdAt", type: "Date", constraint: "Timestamp" },
+    ],
+    indexes: ["requestId", "scheduledDate"],
+  },
+  {
+    name: "service_history",
+    icon: BookOpen,
+    color: "from-purple-600 to-purple-700",
+    bgColor: "bg-purple-50",
+    fields: [
+      { name: "_id", type: "ObjectId", constraint: "Primary Key" },
+      { name: "userId", type: "ObjectId", constraint: "FK: users" },
+      { name: "providerId", type: "ObjectId", constraint: "FK: providers" },
+      { name: "serviceType", type: "String", constraint: "Required" },
+      { name: "cost", type: "Decimal", constraint: "Required" },
+      { name: "completedAt", type: "Date", constraint: "Timestamp" },
+    ],
+    indexes: ["userId", "providerId", "completedAt"],
+  },
+];
